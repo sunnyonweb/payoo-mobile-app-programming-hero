@@ -196,7 +196,91 @@ document.getElementById('t-btn').addEventListener('click',function(e){
     alert('Transfer Money successful! Your new balance is: ' + totalNewBallance);
 })
 
+// get Bonus variable
+const validCoupons = {
+  'BONUS50': 50,
+  'FREE100': 100,
+  'DISCOUNT20': 20
+};
 
+// get Bonus Features
+document.getElementById('b-btn').addEventListener('click', function(e){
+    e.preventDefault();
+
+    const couponInput = document.getElementById('bonus-amount').value.trim().toUpperCase();
+    const availableBalance = getInnertext('available-ballance'); 
+
+    if (!couponInput) {
+        alert('Please enter a coupon code');
+        return;
+    }
+
+    if (!(couponInput in validCoupons)) {
+        alert('Invalid coupon code');
+        return;
+    }
+
+    const bonusAmount = validCoupons[couponInput];
+    const newBalance = availableBalance + bonusAmount;
+
+    document.getElementById('available-ballance').innerText = newBalance;
+
+    
+    document.getElementById('bonus-amount').value = '';
+
+    alert(`Congrats! Your bonus ₹${bonusAmount} has been added. New balance: ₹${newBalance}`);
+});
+
+
+// Pay Bill Features
+document.getElementById('p-btn').addEventListener('click',function(e){
+    e.preventDefault() ;
+
+    const bank = document.getElementById('bill').value;
+
+    const accountNumber = document.getElementById('pay-account-number').value ;
+
+    const amount = getInputValueNumber('pay-amount');
+    if(isNaN(amount) || amount <= 0){
+        alert('Invalid Amount')
+        return;
+    }
+
+    const pinNumber = getInputValueNumber('pay-pin');
+
+    const pin =parseInt(pinNumber)
+
+    const availableBallance = getInnertext('available-ballance') ;
+
+    if (amount > availableBallance) {
+    alert('Your balance is insufficient.');
+    return;
+    }
+
+    if(accountNumber.length !== 11){
+        alert('please provide valid Biller account Number')
+        return;
+    }
+    if(pin !==validpin){
+        alert('Please Provide Valid Pin Number')
+        return;
+    }
+
+    
+    const totalNewBallance = amount - availableBallance ;
+
+    document.getElementById('available-ballance').innerText = totalNewBallance ;
+
+
+    // after add money
+    document.getElementById('bill').value = '';
+    document.getElementById('pay-account-number').value = '';
+    document.getElementById('pay-amount').value = '';
+    document.getElementById('pay-pin').value = '';
+
+    
+    alert('Pay Bill successfully! Your new balance is: ' - totalNewBallance);
+})
 
 
 
@@ -227,41 +311,25 @@ document.getElementById('bonus-btn').addEventListener('click', function(e){
     activeBtn('bonus-btn')
 })
 
+// for Pay Bill 
+document.getElementById('pay-bill-btn').addEventListener('click', function(e){
+    handleToggle('pay-bill-parent')
+    activeBtn('pay-bill-btn')
+})
+// for Transaction 
+document.getElementById('Transactions-btn').addEventListener('click', function(e){
+    handleToggle('transaction-parent')
+    activeBtn('Transactions-btn')
+})
 
 
 
-// aita copy from chatgpt
+// Logout Feature
+document.getElementById('logoutBtn').addEventListener('click', function () {
+    
+    localStorage.clear();
+    sessionStorage.clear();
 
-
-const validCoupons = {
-  'BONUS50': 50,
-  'FREE100': 100,
-  'DISCOUNT20': 20
-};
-
-document.getElementById('B-btn').addEventListener('click', function(e){
-    e.preventDefault();
-
-    const couponInput = document.getElementById('bonus-amount').value.trim().toUpperCase();
-    const availableBalance = getInnertext('available-ballance'); // আগের মতোই getInnertext ফাংশন ব্যবহার করলাম
-
-    if (!couponInput) {
-        alert('Please enter a coupon code');
-        return;
-    }
-
-    if (!(couponInput in validCoupons)) {
-        alert('Invalid coupon code');
-        return;
-    }
-
-    const bonusAmount = validCoupons[couponInput];
-    const newBalance = availableBalance + bonusAmount;
-
-    document.getElementById('available-ballance').innerText = newBalance;
-
-    // কুপন ইনপুট ফিল্ড ক্লিয়ার
-    document.getElementById('bonus-amount').value = '';
-
-    alert(`Congrats! Your bonus ₹${bonusAmount} has been added. New balance: ₹${newBalance}`);
+    // login page 
+    window.location.replace('./index.html');  
 });
